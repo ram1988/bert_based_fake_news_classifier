@@ -57,6 +57,4 @@ def predict(text):
     return 1 if result_1 > result_0 else 0
 
 op1 = predict("#CityofCalgary has activated its Municipal Emergency Plan. #yycstorm")
-op2 = predict("FUCK FUCK")
 print(op1)
-print(op2)
