@@ -8,7 +8,7 @@ classifier = BertClassifier()
 def load_sentences(file_path):
     df = pd.read_csv(file_path)
     print(df)
-    return df["text"], (df["target"] if "target" in df else None)
+    return df["text"], (df["target"] if "target" in df else None), df["id"]
 
 def prepare_train_dataset():
     train_text, train_labels = load_sentences("./data/train.csv")
@@ -29,12 +29,11 @@ def prepare_train_dataset():
     return encoded_train_dataset, train_labels
 
 def train_and_evaluate():
-    prepare_train_dataset()
+    # prepare_train_dataset()
     prepared_train_dataset = pickle.load(open("prepared_train_dataset.pkl","rb"))
     train_data = prepared_train_dataset[0]
     train_labels = prepared_train_dataset[1]
     total_len = len(train_data)
-    total_train_len = int(0.8 * total_len)
     total_eval_len = int(0.2 * total_len)
 
     train_records = train_data[0:total_len]
@@ -47,14 +46,27 @@ def train_and_evaluate():
     accuracy = classifier.evaluate(eval_records, eval_record_labels)
     print(accuracy)
 
-def predict(text):
+def predict_outcome(text):
     encoded = classifier.pre_process_text(text)
     encoded = np.array([encoded])
     result = classifier.predict(encoded)
     result = result[0]
     result_0 = result[0]
     result_1 = result[1]
-    return 1 if result_1 > result_0 else 0
+    predicted = 1 if result_1 > result_0 else 0
+    return predicted
 
-op1 = predict("#CityofCalgary has activated its Municipal Emergency Plan. #yycstorm")
-print(op1)
+def predict_outcomes():
+    test_texts, test_labels, test_id = load_sentences("./data/test.csv")
+    with open('outcome.csv', 'a') as outcome_file:
+        outcome_file.write("id,target")
+        for i, test_text in enumerate(test_texts):
+            print(test_id[i])
+            predicted = predict_outcome(test_text)
+            outcome_file.write(str(test_id[i]) + "," + str(predicted) + "\n")
+
+
+#train_and_evaluate()
+#predict_outcomes()
+op = predict_outcome("this is a fake text...")
+print(op)

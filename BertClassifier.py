@@ -23,6 +23,7 @@ class BertClassifier:
     def train(self, inputs, labels):
         self.nn_model = keras.Sequential([
             keras.layers.Flatten(input_shape=(38400, )),
+            keras.layers.Dropout(0.7),
             keras.layers.Dense(2),
             keras.layers.Softmax()
         ])
