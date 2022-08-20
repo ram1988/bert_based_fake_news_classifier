@@ -67,6 +67,7 @@ def predict_outcomes():
             outcome_file.write(str(test_id[i]) + "," + str(predicted) + "\n")
 
 
+# Label Meaning: 1=original news, 0=fake news
 # prepare the dataset compatible to the Model training
 prepare_train_dataset()
 # train and evaluate the model
