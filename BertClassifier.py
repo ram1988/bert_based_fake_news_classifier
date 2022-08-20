@@ -10,9 +10,11 @@ class BertClassifier:
     EPOCHS = 100
 
     def __init__(self):
+        # Download the pre-trained BERT model
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.model = TFBertModel.from_pretrained('bert-base-uncased')
 
+    # Fetch the embeddings of the sentence 
     def pre_process_text(self, input):
         input_ids = tf.constant(self.tokenizer.encode(input, add_special_tokens=True, max_length=50, pad_to_max_length=True))[None, :]
         outputs = self.model(input_ids)
